@@ -13,6 +13,7 @@ import com.dansplugins.factionsystem.command.faction.claim.MfFactionClaimFillCom
 import com.dansplugins.factionsystem.command.faction.create.MfFactionCreateCommand
 import com.dansplugins.factionsystem.command.faction.declareindependence.MfFactionDeclareIndependenceCommand
 import com.dansplugins.factionsystem.command.faction.declarewar.MfFactionDeclareWarCommand
+import com.dansplugins.factionsystem.command.faction.dev.MfFactionDevCommand
 import com.dansplugins.factionsystem.command.faction.disband.MfFactionDisbandCommand
 import com.dansplugins.factionsystem.command.faction.flag.MfFactionFlagCommand
 import com.dansplugins.factionsystem.command.faction.grantindependence.MfFactionGrantIndependenceCommand
@@ -87,6 +88,7 @@ class MfFactionCommand(private val plugin: MedievalFactions) : CommandExecutor, 
     private val factionChatCommand = MfFactionChatCommand(plugin)
     private val factionBonusPowerCommand = MfFactionBonusPowerCommand(plugin)
     private val factionRelationshipCommand = MfFactionRelationshipCommand(plugin)
+    private val factionDevCommand = MfFactionDevCommand(plugin)
 
     // Backwards compatibility:
     private val factionClaimAutoCommand = MfFactionClaimAutoCommand(plugin)
@@ -129,6 +131,7 @@ class MfFactionCommand(private val plugin: MedievalFactions) : CommandExecutor, 
     private val chatAliases = listOf("chat", plugin.language["CmdFactionChat"])
     private val bonusPowerAliases = listOf("bonuspower", plugin.language["CmdFactionBonusPower"])
     private val relationshipAliases = listOf("relationship", plugin.language["CmdFactionRelationship"])
+    private val devAliases = if (plugin.config.getBoolean("dev.enableDevCommands")) listOf("dev") else emptyList()
 
     // Backwards compatibility:
     private val claimAutoAliases = listOf("autoclaim")
@@ -171,6 +174,7 @@ class MfFactionCommand(private val plugin: MedievalFactions) : CommandExecutor, 
         chatAliases +
         bonusPowerAliases +
         relationshipAliases +
+        devAliases +
         // Backwards compatibility aliases:
         claimAutoAliases +
         claimFillAliases +
@@ -214,6 +218,7 @@ class MfFactionCommand(private val plugin: MedievalFactions) : CommandExecutor, 
             in chatAliases -> factionChatCommand.onCommand(sender, command, label, args.drop(1).toTypedArray())
             in bonusPowerAliases -> factionBonusPowerCommand.onCommand(sender, command, label, args.drop(1).toTypedArray())
             in relationshipAliases -> factionRelationshipCommand.onCommand(sender, command, label, args.drop(1).toTypedArray())
+            in devAliases -> factionDevCommand.onCommand(sender, command, label, args.drop(1).toTypedArray())
             // Backwards compatibility:
             in claimAutoAliases -> {
                 sender.sendMessage("${RED}Command deprecated, use \"/mf claim auto\" instead")
@@ -283,6 +288,7 @@ class MfFactionCommand(private val plugin: MedievalFactions) : CommandExecutor, 
             in chatAliases -> factionChatCommand.onTabComplete(sender, command, label, args.drop(1).toTypedArray())
             in bonusPowerAliases -> factionBonusPowerCommand.onTabComplete(sender, command, label, args.drop(1).toTypedArray())
             in relationshipAliases -> factionRelationshipCommand.onTabComplete(sender, command, label, args.drop(1).toTypedArray())
+            in devAliases -> factionDevCommand.onTabComplete(sender, command, label, args.drop(1).toTypedArray())
             // Backwards compatibility:
             in claimAutoAliases -> factionClaimAutoCommand.onTabComplete(sender, command, label, args.drop(1).toTypedArray())
             in claimFillAliases -> factionClaimFillCommand.onTabComplete(sender, command, label, args.drop(1).toTypedArray())
