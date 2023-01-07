@@ -71,6 +71,11 @@ class MfFactionRoleSetPermissionCommand(private val plugin: MedievalFactions) : 
                 sender.sendMessage("$RED${plugin.language["CommandFactionRoleSetPermissionNoFactionPermission"]}")
                 return@Runnable
             }
+
+            if (permission == plugin.factionPermissions.modifyRole(playerRole.id)) {
+                sender.sendMessage("$RED${plugin.language["CommandFactionRoleSetPermissionCannotModifyRolePermissionToModifyOwnRolePermission"]}")
+                return@Runnable
+            }
             val updatedFaction = factionService.save(faction.copy(roles = faction.roles.copy(roles = faction.roles.map {
                 if (it.id.value == targetRole.id.value) {
                     targetRole.copy(permissionsByName = targetRole.permissionsByName + (permission.name to permissionValue))
